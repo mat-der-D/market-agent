@@ -65,7 +65,7 @@ async def usd2jpy(interaction: discord.Interaction, amount: float):
     await interaction.response.defer()
     try:
         data = await call_convert_api("USD", "JPY", amount)
-        if "error" in data:
+        if data.get("error"):
             message = f"エラー: {data['error']}"
         else:
             message = format_success(amount, "USD", "JPY", data)
@@ -81,7 +81,7 @@ async def jpy2usd(interaction: discord.Interaction, amount: float):
     await interaction.response.defer()
     try:
         data = await call_convert_api("JPY", "USD", amount)
-        if "error" in data:
+        if data.get("error"):
             message = f"エラー: {data['error']}"
         else:
             message = format_success(amount, "JPY", "USD", data)
