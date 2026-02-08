@@ -1,5 +1,8 @@
 import os
 import logging
+from datetime import datetime, timezone, timedelta
+
+JST = timezone(timedelta(hours=9))
 
 import aiohttp
 import discord
@@ -50,12 +53,13 @@ def format_success(amount: float, from_currency: str, to_currency: str, data: di
     result = data["result"]
     rate = data["rate"]
     fetched_at = data["fetched_at"]
-    dt_str = fetched_at.replace("T", " ").replace("Z", "").rsplit(":", 1)[0]
+    dt = datetime.fromisoformat(fetched_at.replace("Z", "+00:00"))
+    dt_str = dt.astimezone(JST).strftime("%Y-%m-%d %H:%M")
     result_formatted = f"{result:,.2f}"
     amount_formatted = f"{amount:,g}"
     return (
         f"{amount_formatted} {from_currency} = {result_formatted} {to_currency}\n"
-        f"（レート: {rate}、取得時刻: {dt_str} UTC）"
+        f"（レート: {rate}、取得時刻: {dt_str} JST）"
     )
 
 
